@@ -1,0 +1,85 @@
+Sum==k (Any numbers) : Prefix Sum + HashMap
+Sum (>=, >, <, <=) k (0 and Positive Numbers Only) : Sliding Window
+Sum (>=, >, <, <=) K (Any numbers) : Prefix Sum + Monotonic Stack
+Max/Min Sum (Any numbers) : Kadane's Algorithm
+Product (Any numbers) : Modified Kadane's (track min & max)
+Majority (Count > K) : Transform array to +-1 then : Prefix Sum + HashMap
+----------------------------------------------------------------------
+1. The "Monotonicity" Rule
+With Positives only (and 0): The prefix sum is monotonic—it only goes up. This means if you move the right pointer, the sum always increases. If it gets too big, you move the left pointer to decrease it.
+With Negatives: Adding an element can make the sum go up OR down. You lose that "predictable" direction, so a simple Sliding Window doesn't know whether to expand or shrink.
+
+2. How to choose based on numbers
+The operators (<, <=, >, >=) just tell you when to stop or update, but the approach is decided by the array content:
+
+3. The Only Exception: "Exact Equality"
+If the question asks for Sum == K, you almost always use Prefix Sum + HashMap, regardless of whether the numbers are positive or negative.
+Why? Because even with positive numbers, a sliding window only tells you if you are "above" or "below" a target; a HashMap finds the exact previous state needed to hit K instantly.
+-----------------------------------------------------------------------
+Summary Checklist:
+Check the values: Are there negative numbers?
+No negatives: Use Sliding Window.
+Negatives present: Use Monotonic Stack or HashMap.
+
+Check the goal:
+Equality: HashMap.
+Inequality: Sliding Window (if positive) or Monotonic Stack (if negative).
+----------------------------------------------------------------------
+Crucial Interview Tips
+Why Sliding Window beats Map/Stack: Sliding window uses O(1) space, whereas Map/Stack approaches use O(n) space. If the array is all positives, always go for Sliding Window to impress the interviewer with space optimization.
+The "Zero" Problem in Product: In the Max Product problem, a zero resets your product. Remember to handle it by either resetting your Kadane variables or using a "two-pass" approach (left-to-right and right-to-left).
+The "At Most K" Trick: For problems like "Longest subarray with exactly K distinct elements," it is often easier to calculate (At Most K) - (At Most K-1) using a Sliding Window.
+----------------------------------------------------------------------
+1. Sliding Window (Two Pointers)
+This is the most efficient approach O(n) time, but it only works if the condition is monotonic.
+When to use: Longest/Shortest subarray where the sum/count <= k or >= k, and all elements are non-negative.
+Mechanism: Expand the right pointer to find a valid window; shrink the left pointer to find the smallest valid (for shortest) or to stay within bounds (for longest).
+Problems:
+Longest Substring Without Repeating Characters
+Minimum Size Subarray Sum
+Max Consecutive Ones III
+----------------------------------------------------------------------
+2. Prefix Sum + HashMap
+This approach "remembers" the past to solve the present.
+When to use: Finding a subarray with an exact sum k (e.g., Sum = k), or where counts of two elements are equal.
+Mechanism: Store prefixSum as the key and the index as the value.
+For Longest: Only store the first occurrence of a sum.
+For Shortest: Update the map with the latest occurrence.
+Problems:
+Subarray Sum Equals K
+Contiguous Array
+Path Sum III
+----------------------------------------------------------------------
+3. Prefix Sum + Monotonic Stack
+This is the "pro" version for when things aren't simple.
+When to use: Longest subarray with Sum > K or Sum < K when the array contains negative numbers.
+Mechanism: Build a stack of prefix sum indices that are strictly decreasing. Then, iterate from the end of the array to find the widest "gap" that satisfies the inequality.
+Problems:
+Longest Well-Performing Interval
+Maximum Width Ramp
+Shortest Subarray with Sum at Least K
+----------------------------------------------------------------------
+4. Kadane’s Algorithm (Dynamic Programming)
+When to use: Finding the Maximum Sum Subarray or Minimum Sum Subarray.
+Mechanism: At each element, decide: "Should I start a new subarray here, or continue the previous one?"
+current_max = max(arr[i], current_max + arr[i])
+Problems:
+Maximum Subarray
+Maximum Sum Circular Subarray
+Maximum Product Subarray
+----------------------------------------------------------------------
+5. Two-Pass / Deque (Sliding Window Maximum)
+When to use: Problems involving the range (max - min) or a sliding window where you need the maximum/minimum element inside that window.
+Mechanism: Use a Monotonic Queue (Deque) to keep track of the max/min element in O(1) as the window slides.
+Problems:
+Sliding Window Maximum
+Longest Continuous Subarray With Absolute Diff Less Than or Equal to Limit
+-----------------------------------------------------------------------
+6. Binary Search on the Answer
+When to use: When you can easily check if a subarray of length L exists that satisfies the condition.
+Mechanism: If a subarray of length L works, does L+1 work? (Used often in "Smallest length such that sum >= K"). This is usually O(n \log n).
+Problems:
+Koko Eating Bananas
+Split Array Largest Sum
+Minimum Limit of Balls in a Bag
+------------------------------------------------------------------------

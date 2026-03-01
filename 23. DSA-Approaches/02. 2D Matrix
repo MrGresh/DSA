@@ -1,0 +1,20 @@
+1. Range Sum & Property Queries
+These problems ask you to find the sum or a specific property (like the number of squares) within a rectangular subregion.
+Static Matrix (No Updates): Use 2D Prefix Sum (Summed-Area Table). This allows you to answer any range sum query in O(1) time after O(N x M) preprocessing.
+Dynamic Matrix (Frequent Updates): If elements change between queries, you'll need more advanced structures like a 2D Fenwick Tree (BIT) or a 2D Segment Tree, which handle both updates and queries in O(log N x log M) time.
+----------------------------------------------
+2. Range Update Queries
+Lazy Updates: Use the 2D Difference Array trick we just discussed. You mark the four corners and compute the final state once at the end.
+Query-by-Query Updates: If you need to know the matrix state between update queries, you again move into 2D Segment Tree territory with "Lazy Propagation."
+------------------------------------------------
+3. Search & Comparison Queries
+These ask "Where is X?" or "What is the K-th smallest value?"
+Sorted Matrix Search: If rows and columns are sorted, you can use the Staircase Search (starting from top-right or bottom-left) in O(N+M) or Binary Search on the answer in O(Nlog(max_val)).
+Common Elements: Finding elements present in all rows using a HashMap or Frequency Array.
+------------------------------------------------------
+4. Path & Connectivity Queries
+These treat the matrix as a graph where each cell is a node.
+Reachability: "Can a robot reach (N, M) from (0, 0)?" → Use BFS/DFS.
+Shortest Path: "What is the minimum steps/cost?" → Use Dijkstra’s (if weights differ) or BFS (if all weights are 1).
+Counting Paths: "How many ways to reach the end?" → Use Dynamic Programming (e.g., $dp[i][j] = dp[i-1][j] + dp[i][j-1]$).
+--------------------------------------------------------
