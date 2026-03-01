@@ -1,0 +1,10 @@
+class Solution extends SolBase {
+    public int rand10() {
+        int a = rand7();
+        int b = rand7();
+        int pos = (a-1)*7 + b;
+        if(pos>40) return rand10();
+        // if(pos<10) return rand10(); // both lines are correct, can use any one
+        return pos%10+1;
+    }
+}

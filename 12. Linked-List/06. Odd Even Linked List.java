@@ -1,0 +1,26 @@
+class Solution {
+    public ListNode oddEvenList(ListNode head) {
+        if(head==null || head.next==null || head.next.next==null) return head;
+        ListNode oddHead = head;
+        ListNode evenHead = head.next;
+        ListNode currOdd = oddHead;
+        ListNode currEven = evenHead;
+        boolean f = false;
+        ListNode t = head.next.next;
+        while(t!=null) {
+            f = !f;
+            if(f) {
+                currOdd.next = t;
+                currOdd = currOdd.next;
+            }
+            else {
+                currEven.next = t;
+                currEven = currEven.next;
+            }
+            t = t.next;
+        }
+        currEven.next = null;
+        currOdd.next = evenHead;
+        return oddHead;
+    }
+}

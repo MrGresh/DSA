@@ -1,0 +1,31 @@
+class Solution {
+    public void sortColors(int[] nums) {
+        int a = 0, b = 0, c = nums.length;
+        while(b<c) {
+            if(nums[b]==1) b++;
+            else if(nums[b]==0) {
+                swap(a, b, nums);
+                a++;
+                b++;
+            } else {
+                swap(b, c-1, nums);
+                c--;
+            }
+        }
+    }
+    public void swap(int idx1, int idx2, int[] arr) {
+        int t = arr[idx1];
+        arr[idx1] = arr[idx2];
+        arr[idx2] = t;
+    }
+}
+
+/*
+
+Dutch Flag Algo : 
+Region 1 : [0 to a-1]
+Region 2 : [a to b-1]
+Unknown : [b to c-1]
+Region 3 : [c to n-1]
+
+*/

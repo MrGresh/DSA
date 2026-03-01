@@ -1,0 +1,45 @@
+class Solution {
+    int ans = 0;
+    Map<TreeNode, Integer> dp;
+    public int diameterOfBinaryTree(TreeNode root) {
+        ans = 0;
+        dp = new HashMap<>();
+        rec(root);
+        return ans;
+    }
+    void rec(TreeNode root) {
+        if(root==null) return;
+        int lh = maxDepth(root.left);
+        int rh = maxDepth(root.right);
+        ans = Math.max(ans, lh+rh);
+        rec(root.left);
+        rec(root.right);
+    }
+    public int maxDepth(TreeNode root) {
+        if(root==null) return 0;
+        if(dp.containsKey(root)) return dp.get(root);
+        int val = 1 + Math.max(maxDepth(root.left), maxDepth(root.right));
+        dp.put(root, val);
+        return val;
+    }
+}
+--------------------------------------
+class Solution {
+    int diameter = 0;
+
+    public int diameterOfBinaryTree(TreeNode root) {
+        calculateHeight(root);
+        return diameter;
+    }
+
+    private int calculateHeight(TreeNode node) {
+        if (node == null) return 0;
+
+        int leftHeight = calculateHeight(node.left);
+        int rightHeight = calculateHeight(node.right);
+
+        diameter = Math.max(diameter, leftHeight + rightHeight);
+
+        return 1 + Math.max(leftHeight, rightHeight);
+    }
+}

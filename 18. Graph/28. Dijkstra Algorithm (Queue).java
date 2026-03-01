@@ -1,0 +1,89 @@
+class Solution {
+    public int[] dijkstra(int V, int[][] edges, int src) {
+        // 1. Build Adjacency List
+        List<List<int[]>> adj = new ArrayList<>();
+        for (int i = 0; i < V; i++) adj.add(new ArrayList<>());
+        for (int[] edge : edges) {
+            adj.get(edge[0]).add(new int[]{edge[1], edge[2]});
+            adj.get(edge[1]).add(new int[]{edge[0], edge[2]});
+        }
+
+        int[] dist = new int[V];
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        
+        // Simple FIFO Queue
+        Queue<Integer> q = new LinkedList<>();
+        
+        dist[src] = 0;
+        q.add(src);
+
+        while (!q.isEmpty()) {
+            int u = q.poll();
+
+            for (int[] neighbor : adj.get(u)) {
+                int v = neighbor[0];
+                int weight = neighbor[1];
+
+                // The Relaxation Step
+                if (dist[u] != Integer.MAX_VALUE && dist[u] + weight < dist[v]) {
+                    dist[v] = dist[u] + weight;
+                    q.add(v);
+                }
+            }
+        }
+        
+        // Clean up unreachable nodes
+        for (int i = 0; i < V; i++) {
+            if (dist[i] == Integer.MAX_VALUE) dist[i] = -1;
+        }
+
+        return dist;
+    }
+}
+----------------------------------------------------------------------------------------------------------------
+// Shortest Path Faster Algorithm (SPFA): Queue + inQueue
+class Solution {
+    public int[] dijkstra(int V, int[][] edges, int src) {
+        // 1. Build Adjacency List
+        List<List<int[]>> adj = new ArrayList<>();
+        for (int i = 0; i < V; i++) adj.add(new ArrayList<>());
+        for (int[] edge : edges) {
+            adj.get(edge[0]).add(new int[]{edge[1], edge[2]});
+            adj.get(edge[1]).add(new int[]{edge[0], edge[2]});
+        }
+
+        int[] dist = new int[V];
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        
+        // This tracks if a node is CURRENTLY in the queue
+        boolean[] inQueue = new boolean[V]; 
+        
+        Queue<Integer> q = new LinkedList<>();
+        
+        dist[src] = 0;
+        q.add(src);
+        inQueue[src] = true;
+
+        while (!q.isEmpty()) {
+            int u = q.poll();
+            inQueue[u] = false; // Node is no longer in the queue
+
+            for (int[] neighbor : adj.get(u)) {
+                int v = neighbor[0];
+                int weight = neighbor[1];
+
+                // If we found a SHORTER path to v
+                if (dist[u] + weight < dist[v]) {
+                    dist[v] = dist[u] + weight;
+                    
+                    // Only add to queue if it's not already there waiting to be processed
+                    if (!inQueue[v]) {
+                        q.add(v);
+                        inQueue[v] = true;
+                    }
+                }
+            }
+        }
+        return dist;
+    }
+}

@@ -1,0 +1,60 @@
+// Undirected Graph
+int findMinCycle(int V, int[][] edges) {
+    List<List<Edge>> graph = new ArrayList<>();
+    for (int i = 0; i < V; i++) graph.add(new ArrayList<>());
+    for (int[] e : edges) {
+        graph.get(e[0]).add(new Edge(e[1], e[2]));
+        graph.get(e[1]).add(new Edge(e[0], e[2]));
+    }
+
+    int minCycle = INF;
+    for (int[] e : edges) {
+        int u = e[0], v = e[1], w = e[2];
+
+        // Temporarily remove edge u-v
+        graph.get(u).removeIf(edge -> edge.to == v && edge.weight == w);
+        graph.get(v).removeIf(edge -> edge.to == u && edge.weight == w);
+
+        // Find shortest path u -> v
+        int dist = dijkstra(graph, u, v);
+        if (dist < INF) {
+            minCycle = Math.min(minCycle, dist + w);
+        }
+
+        // Restore edge
+        graph.get(u).add(new Edge(v, w));
+        graph.get(v).add(new Edge(u, w));
+    }
+    return (minCycle == INF) ? -1 : minCycle;
+}
+-------------------------------------------------------------------------------------------------------
+// Directed Graph
+int findMinCycle(int V, int[][] edges) {
+    List<List<Edge>> graph = new ArrayList<>();
+    for (int i = 0; i < V; i++) graph.add(new ArrayList<>());
+    for (int[] e : edges) {
+        graph.get(e[0]).add(new Edge(e[1], e[2]));
+    }
+
+    int minCycle = INF;
+    for (int[] e : edges) {
+        int u = e[0], v = e[1], w = e[2];
+
+        // Temporarily remove edge u->v
+        graph.get(u).removeIf(edge -> edge.to == v && edge.weight == w);
+
+        // Find shortest path v -> u
+        int dist = dijkstra(graph, v, u);
+        if (dist < INF) {
+            minCycle = Math.min(minCycle, dist + w);
+        }
+
+        // Restore edge
+        graph.get(u).add(new Edge(v, w));
+    }
+    return (minCycle == INF) ? -1 : minCycle;
+}
+----------------------------------------------------------------------------------------
+✅ Key Rule
+- Undirected → dijkstra(u, v) or dijkstra(v, u) both will work.
+- Directed → only dijkstra(v, u) is correct.

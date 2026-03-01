@@ -1,0 +1,12 @@
+class Solution {
+    public boolean areNumbersAscending(String str) {
+        int x = -1;
+        for(String s : str.split(" ")) {
+            if(s.charAt(0)>='1' && s.charAt(0)<='9') {
+                if(Integer.parseInt(s)<=x) return false;
+                else x = Integer.parseInt(s);
+            }
+        }
+        return true;
+    }
+}

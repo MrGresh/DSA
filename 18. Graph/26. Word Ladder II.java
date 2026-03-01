@@ -1,0 +1,127 @@
+class Solution {
+    public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+        List<List<String>> res = new ArrayList<>();
+        Set<String> dict = new HashSet<>(wordList);
+        if (!dict.contains(endWord)) return res;
+        Queue<List<String>> queue = new LinkedList<>();
+        queue.add(new ArrayList<>(Arrays.asList(beginWord)));
+        boolean found = false;
+        while (!queue.isEmpty() && !found) {
+            int size = queue.size();
+            Set<String> localVisited = new HashSet<>();
+            for (int i = 0; i < size; i++) {
+                List<String> path = queue.poll();
+                String lastWord = path.get(path.size() - 1);
+                for (String neighbor : getNeighbors(lastWord, dict)) {
+                    List<String> newPath = new ArrayList<>(path);
+                    newPath.add(neighbor);
+                    if (neighbor.equals(endWord)) {
+                        found = true;
+                        res.add(newPath);
+                    } else queue.add(newPath);
+                    localVisited.add(neighbor);
+                }
+            }
+            dict.removeAll(localVisited);
+        }
+        return res;
+    }
+
+    private List<String> getNeighbors(String word, Set<String> dict) {
+        List<String> neighbors = new ArrayList<>();
+        char[] chars = word.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            char old = chars[i];
+            for (char c = 'a'; c <= 'z'; c++) {
+                if (c == old) continue;
+                chars[i] = c;
+                String next = new String(chars);
+                if (dict.contains(next)) {
+                    neighbors.add(next);
+                }
+            }
+            chars[i] = old;
+        }
+        return neighbors;
+    }
+}
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+class Solution {
+    Set<String> dict;
+    List<List<String>> result = new ArrayList<>();
+    Map<String, Integer> distanceMap = new HashMap<>();
+
+    public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+        dict = new HashSet<>(wordList);
+        if (!dict.contains(endWord)) return result;
+
+        // Step 1: BFS to find the shortest distance to each word
+        bfs(beginWord, endWord);
+
+        // Step 2: DFS to backtrack from endWord to beginWord
+        if (distanceMap.containsKey(endWord)) {
+            List<String> path = new ArrayList<>();
+            path.add(endWord);
+            dfs(endWord, beginWord, path);
+        }
+
+        return result;
+    }
+
+    private void bfs(String start, String end) {
+        Queue<String> queue = new LinkedList<>();
+        queue.add(start);
+        distanceMap.put(start, 0);
+
+        while (!queue.isEmpty()) {
+            String curr = queue.poll();
+            int level = distanceMap.get(curr);
+
+            // Optimization: if we found endWord, we don't need to explore further levels
+            if (curr.equals(end)) break;
+
+            char[] chars = curr.toCharArray();
+            for (int i = 0; i < chars.length; i++) {
+                char old = chars[i];
+                for (char c = 'a'; c <= 'z'; c++) {
+                    chars[i] = c;
+                    String next = new String(chars);
+
+                    if (dict.contains(next) && !distanceMap.containsKey(next)) {
+                        distanceMap.put(next, level + 1);
+                        queue.add(next);
+                    }
+                }
+                chars[i] = old;
+            }
+        }
+    }
+
+    private void dfs(String curr, String beginWord, List<String> path) {
+        if (curr.equals(beginWord)) {
+            List<String> validPath = new ArrayList<>(path);
+            Collections.reverse(validPath);
+            result.add(validPath);
+            return;
+        }
+
+        int currLevel = distanceMap.get(curr);
+        char[] chars = curr.toCharArray();
+
+        for (int i = 0; i < chars.length; i++) {
+            char old = chars[i];
+            for (char c = 'a'; c <= 'z'; c++) {
+                chars[i] = c;
+                String prev = new String(chars);
+
+                // Check if this neighbor was the step right before the current word in BFS
+                if (distanceMap.containsKey(prev) && distanceMap.get(prev) == currLevel - 1) {
+                    path.add(prev);
+                    dfs(prev, beginWord, path);
+                    path.remove(path.size() - 1); // Backtrack
+                }
+            }
+            chars[i] = old;
+        }
+    }
+}

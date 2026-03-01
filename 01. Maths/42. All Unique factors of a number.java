@@ -1,0 +1,14 @@
+public class FactorFinder {
+    public List<Integer> getAllFactors(int n) {
+        Set<Integer> factors = new TreeSet<>();
+        
+        for (int i = 1; i * i <= n; i++) {
+            if (n % i == 0) {
+                factors.add(i);      // Add the divisor
+                factors.add(n / i);  // Add the paired divisor
+            }
+        }
+        
+        return new ArrayList<>(factors);
+    }
+}

@@ -1,0 +1,25 @@
+class Solution {
+    public static ArrayList<Integer> topoSort(int V, int[][] edges) {
+        List<List<Integer>> adj = new ArrayList<>();
+        for(int i=0;i<V;i++) adj.add(new ArrayList<>());
+        int[] inDeg = new int[V];
+        for(int[] edge : edges) {
+            adj.get(edge[0]).add(edge[1]);
+            inDeg[edge[1]]++;
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for(int i=0;i<V;i++) {
+            if(inDeg[i]==0) q.add(i);
+        }
+        ArrayList<Integer> res = new ArrayList<>();
+        while(!q.isEmpty()) {
+            int node = q.poll();
+            res.add(node);
+            for(int nei: adj.get(node)) {
+                inDeg[nei]--;
+                if(inDeg[nei]==0) q.add(nei);
+            }
+        }
+        return res.size()==V ? res : new ArrayList<>();
+    }
+}

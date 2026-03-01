@@ -1,0 +1,31 @@
+class Solution {
+    public int maxPoints(int[][] points) {
+        if (points.length <= 1) return points.length;
+
+        int maxPoints = 1;
+
+        for (int i = 0; i < points.length; i++) {
+            Map<Double, Integer> slopeCount = new HashMap<>();
+            int samePoint = 0, verticalLines = 0, slopeMax = 0;
+
+            for (int j = 0; j < points.length; j++) {
+                if (i == j) continue;
+
+                int dx = points[j][0] - points[i][0];
+                int dy = points[j][1] - points[i][1];
+
+                if (dx == 0 && dy == 0) samePoint++; // Overlapping point
+                else if (dx == 0) verticalLines++; // Vertical line (undefined slope)
+                else {
+                    double slope = (double) dy / dx;
+                    slopeCount.put(slope, slopeCount.getOrDefault(slope, 0) + 1);
+                    slopeMax = Math.max(slopeMax, slopeCount.get(slope));
+                }
+            }
+            int curr = Math.max(slopeMax, verticalLines) + samePoint + 1;
+            maxPoints = Math.max(maxPoints, curr);
+        }
+        
+        return maxPoints;
+    }
+}

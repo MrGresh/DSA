@@ -1,0 +1,10 @@
+public class codefile{
+    static int solve(int[]  arr){
+        Arrays.sort(arr);
+        int res = Integer.MAX_VALUE;
+        for(int i = 0;i<arr.length-1;i++) {
+            res = Math.min(res, arr[i+1]-arr[i]);
+        }
+        return res;
+    }
+}

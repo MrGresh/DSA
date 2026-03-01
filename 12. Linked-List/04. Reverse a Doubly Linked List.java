@@ -1,0 +1,11 @@
+Node reverse(Node head) {
+    Node curr = head, nxt = null, prev = null;
+    while(curr!=null) {
+        nxt = curr.next;
+        curr.next = prev;
+        curr.prev = nxt;
+        prev = curr;
+        curr = nxt;
+    }
+    return prev;
+}

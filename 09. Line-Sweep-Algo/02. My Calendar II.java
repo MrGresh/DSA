@@ -1,0 +1,29 @@
+class MyCalendarTwo {
+    Map<Integer, Integer> meetings;
+    public MyCalendarTwo() {
+        meetings = new TreeMap<>();
+    }
+    
+    public boolean book(int startTime, int endTime) {
+        if(meetings.size()==0) {
+            meetings.put(startTime, 1);
+            meetings.put(endTime, -1);
+            return true;
+        } else {
+            int count = 0;
+            meetings.put(startTime, meetings.getOrDefault(startTime, 0)+1);
+            meetings.put(endTime, meetings.getOrDefault(endTime, 0)-1);
+            for (Map.Entry<Integer, Integer> entry : meetings.entrySet()) {
+                count += entry.getValue();
+                if(count>2) {
+                    if(meetings.get(startTime)==1) meetings.remove(startTime);
+                    else meetings.put(startTime, meetings.get(startTime)-1);
+                    if(meetings.get(endTime)==-1) meetings.remove(endTime);
+                    else meetings.put(endTime, meetings.get(endTime)+1);
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+}

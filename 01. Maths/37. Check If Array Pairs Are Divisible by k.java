@@ -1,0 +1,15 @@
+class Solution {
+    public boolean canArrange(int[] arr, int k) {
+        int[] remaindersFreq = new int[k];
+        for(int ele : arr) {
+            int idx = ele%k;
+            if(idx<0) idx += k;
+            remaindersFreq[idx]++;
+        }
+        if(remaindersFreq[0]%2!=0) return false;
+        for(int i=1;i<=k/2;i++) {
+            if(remaindersFreq[i]!=remaindersFreq[k-i]) return false;
+        }
+        return true;
+    }
+}

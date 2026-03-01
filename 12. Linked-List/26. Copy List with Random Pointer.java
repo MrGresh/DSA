@@ -1,0 +1,58 @@
+public Node copyRandomList(Node head) {
+    Map<Node, Node> map = new HashMap<>();
+    Node t = head;
+    while(t!=null) {
+        map.put(t, new Node(t.val));
+        t = t.next;
+    }
+    t = head;
+    while(t!=null) {
+        Node n1 = map.get(t);
+        if(t.next!=null) {
+            n1.next = map.get(t.next);
+        }
+        if(t.random!=null) {
+            n1.random = map.get(t.random);
+        }
+        t = t.next;
+    }
+    return map.get(head);
+}
+-----------------------------------------------------------------
+class Solution {
+    public Node copyRandomList(Node head) {
+        if(head==null) return null;
+        Node t = head;
+        // inserting nodes in between
+        while(t!=null) {
+            Node newNode = new Node(t.val);
+            newNode.next = t.next;
+            t.next = newNode;
+            t = t.next.next;
+        }
+        // connetcing random pointers
+        t = head;
+        while(t!=null) {
+            if(t.random!=null) t.next.random = t.random.next;
+            t = t.next.next;
+        }
+        // Extracting new list and restoring origial list
+        Node originalHead = head;
+        Node anshead = head.next;
+        Node currOriginal = originalHead;
+        Node curr = anshead;
+        t = head.next.next;
+        while(t!=null) {
+            currOriginal.next = t;
+            curr.next = t.next;
+
+            curr = curr.next;
+            currOriginal = currOriginal.next;
+            
+            t = t.next.next;
+        }
+        currOriginal.next = null;
+        head = originalHead;
+        return anshead;
+    }
+}

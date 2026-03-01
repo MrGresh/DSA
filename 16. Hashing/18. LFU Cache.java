@@ -1,0 +1,137 @@
+// Best : Double Hash Map O(1)
+class LFUCache {
+    private final int capacity;
+    private int minFreq;
+    private final Map<Integer, Node> keyNode; // key -> Node
+    private final Map<Integer, LinkedHashSet<Node>> freqMap; // freq -> nodes
+
+    private static class Node {
+        int key, value, freq;
+        Node(int k, int v) {
+            key = k;
+            value = v;
+            freq = 1;
+        }
+    }
+
+    public LFUCache(int capacity) {
+        this.capacity = capacity;
+        this.minFreq = 0;
+        this.keyNode = new HashMap<>();
+        this.freqMap = new HashMap<>();
+    }
+
+    public int get(int key) {
+        if (!keyNode.containsKey(key)) return -1;
+        Node node = keyNode.get(key);
+        updateFreq(node);
+        return node.value;
+    }
+
+    public void put(int key, int value) {
+        if (capacity == 0) return;
+
+        if (keyNode.containsKey(key)) {
+            Node node = keyNode.get(key);
+            node.value = value;
+            updateFreq(node);
+        } else {
+            if (keyNode.size() == capacity) {
+                // Evict LFU node
+                LinkedHashSet<Node> minFreqList = freqMap.get(minFreq);
+                Node evict = minFreqList.iterator().next(); // LRU among minFreq
+                minFreqList.remove(evict);
+                keyNode.remove(evict.key);
+            }
+            Node newNode = new Node(key, value);
+            keyNode.put(key, newNode);
+            freqMap.computeIfAbsent(1, k -> new LinkedHashSet<>()).add(newNode);
+            minFreq = 1; // reset minFreq for new node
+        }
+    }
+
+    private void updateFreq(Node node) {
+        int oldFreq = node.freq;
+        LinkedHashSet<Node> oldList = freqMap.get(oldFreq);
+        oldList.remove(node);
+
+        if (oldFreq == minFreq && oldList.isEmpty()) {
+            minFreq++;
+        }
+
+        node.freq++;
+        freqMap.computeIfAbsent(node.freq, k -> new LinkedHashSet<>()).add(node);
+    }
+}
+--------------------------------------------------------------------------------
+// Less Efficient: Priority Queue (Min-Heap) O(log N)
+class LFUCache {
+    private final int capacity;
+    private int timer;
+    private final Map<Integer, Node> cache;
+    private final PriorityQueue<Node> minHeap;
+
+    private static class Node implements Comparable<Node> {
+        int key, value, freq, lastUsed;
+
+        Node(int key, int value, int time) {
+            this.key = key;
+            this.value = value;
+            this.freq = 1;
+            this.lastUsed = time;
+        }
+
+        // The Heap uses this to decide who to evict
+        @Override
+        public int compareTo(Node other) {
+            if (this.freq == other.freq) {
+                return Integer.compare(this.lastUsed, other.lastUsed); // Tie-break: LRU
+            }
+            return Integer.compare(this.freq, other.freq); // Primary: LFU
+        }
+    }
+
+    public LFUCache(int capacity) {
+        this.capacity = capacity;
+        this.timer = 0;
+        this.cache = new HashMap<>();
+        // PriorityQueue doesn't support O(log N) updates, 
+        // so we must remove and re-add to "refresh" a node.
+        this.minHeap = new PriorityQueue<>();
+    }
+
+    public int get(int key) {
+        if (!cache.containsKey(key)) return -1;
+        
+        Node node = cache.get(key);
+        updateNode(node);
+        return node.value;
+    }
+
+    public void put(int key, int value) {
+        if (capacity <= 0) return;
+
+        if (cache.containsKey(key)) {
+            Node node = cache.get(key);
+            node.value = value;
+            updateNode(node);
+        } else {
+            if (cache.size() >= capacity) {
+                Node evict = minHeap.poll(); // O(log N)
+                cache.remove(evict.key);
+            }
+            Node newNode = new Node(key, value, ++timer);
+            cache.put(key, newNode);
+            minHeap.offer(newNode); // O(log N)
+        }
+    }
+
+    private void updateNode(Node node) {
+        // Because PQ doesn't have a 'decreaseKey' or 'update' method,
+        // we must remove the old version and re-insert it.
+        minHeap.remove(node); // O(N) in Java's PQ! (See note below)
+        node.freq++;
+        node.lastUsed = ++timer;
+        minHeap.offer(node); // O(log N)
+    }
+}

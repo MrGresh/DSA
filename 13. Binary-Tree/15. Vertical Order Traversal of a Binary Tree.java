@@ -1,0 +1,96 @@
+class NodeInfo {
+    int val;
+    int row;
+    NodeInfo(int val, int row) {
+        this.val = val;
+        this.row = row;
+    }
+}
+class Pair {
+    int level;
+    List<NodeInfo> data;
+    Pair(int level, List<NodeInfo> data) {
+        this.level = level;
+        this.data = data;
+    }
+}
+class Solution {
+    Map<Integer, List<NodeInfo>> map;
+    public List<List<Integer>> verticalTraversal(TreeNode root) {
+        map = new HashMap<>();
+        traverse(root, 0, 0);
+        List<Pair> pairsList = new ArrayList<>();
+        for(Integer key : map.keySet()) {
+            pairsList.add(new Pair(key, map.get(key)));
+        }
+        Collections.sort(pairsList, (a, b) -> a.level - b.level);
+        List<List<Integer>> res = new ArrayList<>();
+        for(Pair x : pairsList) {
+            Collections.sort(x.data, (a, b) -> {
+                if (a.row != b.row) return a.row - b.row;
+                else return a.val - b.val;
+            });
+            List<Integer> currentColumnResult = new ArrayList<>();
+            for (NodeInfo ni : x.data) {
+                currentColumnResult.add(ni.val);
+            }
+            res.add(currentColumnResult);
+        }
+        return res;
+    }
+    void traverse(TreeNode root, int level, int row) {
+        if(root==null) return;
+        List<NodeInfo> curr;
+        if(!map.containsKey(level)) curr = new ArrayList<>();
+        else curr = map.get(level);
+        curr.add(new NodeInfo(root.val, row));
+        map.put(level, curr);
+        traverse(root.left, level-1, row+1);
+        traverse(root.right, level+1, row+1);
+    }
+}
+------------------------------------------------
+class Solution {
+    static class Tuple {
+        TreeNode node;
+        int row, col;
+        Tuple(TreeNode node, int row, int col) {
+            this.node = node;
+            this.row = row;
+            this.col = col;
+        }
+    }
+
+    public List<List<Integer>> verticalTraversal(TreeNode root) {
+        TreeMap<Integer, List<int[]>> columnMap = new TreeMap<>();
+        Queue<Tuple> q = new LinkedList<>();
+
+        q.offer(new Tuple(root, 0, 0)); // root at (0, 0)
+
+        while (!q.isEmpty()) {
+            Tuple t = q.poll();
+            TreeNode node = t.node;
+            int row = t.row, col = t.col;
+
+            columnMap.putIfAbsent(col, new ArrayList<>());
+            columnMap.get(col).add(new int[] { row, node.val });
+
+            if (node.left != null) q.offer(new Tuple(node.left, row + 1, col - 1));
+            if (node.right != null) q.offer(new Tuple(node.right, row + 1, col + 1));
+        }
+
+        List<List<Integer>> result = new ArrayList<>();
+        for (List<int[]> entries : columnMap.values()) {
+            entries.sort((a, b) -> {
+                if (a[0] != b[0]) return Integer.compare(a[0], b[0]);
+                return Integer.compare(a[1], b[1]);
+            });
+
+            List<Integer> column = new ArrayList<>();
+            for (int[] pair : entries) column.add(pair[1]);
+            result.add(column);
+        }
+
+        return result;
+    }
+}

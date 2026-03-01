@@ -1,0 +1,24 @@
+class Solution {
+    public void quickSort(int[] arr, int l, int r) {
+        if(l<r) {
+            int p = partition(arr, l, r);
+            quickSort(arr, l, p-1);
+            quickSort(arr, p+1, r);
+        }
+    }
+    private int partition(int[] arr, int l, int r) {
+        int piv = arr[r];
+        int a = l-1;
+        for(int i=l;i<=r;i++) {
+            if(arr[i]<=piv) swap(arr,i, ++a);
+        }
+        return a;
+    }
+    private void swap(int[] arr, int i, int j) {
+        if (i != j) {
+            int temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+        }
+    }
+}

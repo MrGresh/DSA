@@ -1,0 +1,43 @@
+// 0-1 BFS is a specialized version of Breadth-First Search (BFS) used to find the shortest path in a graph where edge weights are only 0 or 1.
+class Solution {
+    class Edge {
+        int to, weight;
+        Edge(int to, int weight) {
+            this.to = to;
+            this.weight = weight;
+        }
+    }
+
+    public int zeroOneBFS(int V, List<List<Edge>> adj, int src, int dst) {
+        int[] dist = new int[V];
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        
+        Deque<Integer> deque = new ArrayDeque<>();
+
+        dist[src] = 0;
+        deque.addFirst(src);
+
+        while (!deque.isEmpty()) {
+            int u = deque.pollFirst();
+
+            if (u == dst) return dist[u];
+
+            for (Edge edge : adj.get(u)) {
+                int v = edge.to;
+                int weight = edge.weight;
+
+                if (dist[u] + weight < dist[v]) {
+                    dist[v] = dist[u] + weight;
+
+                    if (weight == 0) {
+                        deque.addFirst(v); 
+                    } else {
+                        deque.addLast(v);
+                    }
+                }
+            }
+        }
+
+        return dist[dst] == Integer.MAX_VALUE ? -1 : dist[dst];
+    }
+}

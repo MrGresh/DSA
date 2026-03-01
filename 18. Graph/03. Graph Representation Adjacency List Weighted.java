@@ -1,0 +1,45 @@
+// 1-based Indexing
+public class WeightedGraph {
+    class Edge {
+        int to;
+        int weight;
+        Edge(int to, int weight) {
+            this.to = to;
+            this.weight = weight;
+        }
+    }
+
+    private List<List<Edge>> adjLists;
+    private int numVertices;
+
+    public WeightedGraph(int numVertices) {
+        this.numVertices = numVertices;
+        adjLists = new ArrayList<>(numVertices);
+        
+        for (int i = 0; i <= numVertices; i++) {
+            adjLists.add(new ArrayList<>());
+        }
+    }
+
+    public void addEdge(int nodeA, int nodeB, int weight) {
+        adjLists.get(nodeA).add(new Edge(nodeB, weight));
+        adjLists.get(nodeB).add(new Edge(nodeA, weight)); // Undirected
+    }
+
+    public void printGraph() {
+        for (int i = 0; i <= adjLists.size(); i++) {
+            System.out.println("Vertex " + i + " connections: " + adjLists.get(i));
+        }
+    }
+
+    public static void main(String[] args) {
+        WeightedGraph g = new WeightedGraph(4);
+        
+        g.addEdge(0, 1, 10);
+        g.addEdge(0, 2, 15);
+        g.addEdge(1, 2, 5);
+        g.addEdge(2, 3, 20);
+
+        g.printGraph();
+    }
+}

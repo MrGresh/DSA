@@ -1,0 +1,21 @@
+class Solution {
+    public int subarraysWithKDistinct(int[] nums, int k) {
+        return countSumLessEqual(nums, k) - countSumLessEqual(nums, k-1);
+    }
+    int countSumLessEqual(int[] nums, int k) {
+        if(k<0) return 0;
+        int ans=0, start=0, end=0;
+        Map<Integer, Integer> map = new HashMap<>();
+        while(end<nums.length) {
+            map.put(nums[end], map.getOrDefault(nums[end], 0)+1);
+            while(map.size()>k) {
+                if(map.get(nums[start])==1) map.remove(nums[start]);
+                else map.put(nums[start], map.get(nums[start])-1);
+                start++;
+            }
+            ans += end-start+1;
+            end++;
+        }
+        return ans;
+    }
+}

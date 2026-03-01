@@ -1,0 +1,22 @@
+class Solution {
+    Map<Integer, Integer> dp;
+    public int combinationSum4(int[] nums, int target) {
+        int count = 0;
+        dp = new HashMap<>();
+        for(int x : nums) {
+            if(x>target) continue;
+            count += rec(nums, target-x);
+        }
+        return count;
+    }
+    int rec(int[] nums, int target) {
+        if(target==0) return 1;
+        if(dp.containsKey(target)) return dp.get(target);
+        int val = 0;
+        for(int x : nums) {
+            if(target-x>=0) val += rec(nums, target-x);
+        }
+        dp.put(target, val);
+        return val;
+    }
+}

@@ -1,0 +1,43 @@
+int countNodes(TreeNode root) {
+    if(root==null) return 0;
+    return 1 + countNodes(root.left) + countNodes(root.right);
+}
+---------------------------------------------------------------
+public int countNodes(TreeNode root) {
+    if (root == null) return 0;
+    
+    int leftH = getLeftHeight(root);
+    int rightH = getRightHeight(root);
+    
+    // If leftmost and rightmost heights are the same, it's a perfect tree
+    if (leftH == rightH) return (1 << leftH) - 1;
+    
+    return 1 + countNodes(root.left) + countNodes(root.right);
+}
+
+private int getLeftHeight(TreeNode node) {
+    int height = 0;
+    while (node != null) { height++; node = node.left; }
+    return height;
+}
+
+private int getRightHeight(TreeNode node) {
+    int height = 0;
+    while (node != null) { height++; node = node.right; }
+    return height;
+}
+----------------------------------------------------------------
+public int countNodes(TreeNode root) {
+    if (root == null) return 0;
+    int count = 0;
+    Queue<TreeNode> queue = new LinkedList<>();
+    queue.add(root);
+    
+    while (!queue.isEmpty()) {
+        TreeNode node = queue.poll();
+        count++;
+        if (node.left != null) queue.add(node.left);
+        if (node.right != null) queue.add(node.right);
+    }
+    return count;
+}

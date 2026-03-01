@@ -1,0 +1,26 @@
+class PrimeFactorizer {
+    static void printPrimeFactors(int n) {
+
+        // Step 1: Handle the number of 2s that divide n
+        while (n % 2 == 0) {
+            System.out.print(2 + " ");
+            n /= 2;
+        }
+
+        // Step 2: n must be odd at this point. 
+        // Iterate from 3 to sqrt(n) in steps of 2
+        for (int i = 3; i * i <= n; i += 2) {
+            // While i divides n, print i and divide n
+            while (n % i == 0) {
+                System.out.print(i + " ");
+                n /= i;
+            }
+        }
+
+        // Step 3: If n is a prime number greater than 2
+        if (n > 2) {
+            System.out.print(n);
+        }
+        System.out.println();
+    }
+}

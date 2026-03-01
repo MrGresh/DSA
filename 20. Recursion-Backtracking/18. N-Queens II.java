@@ -1,0 +1,37 @@
+class Solution {
+    int[][] chassBoard;
+    public int totalNQueens(int n) {
+        int res = 0;
+        chassBoard = new int[n][n];
+        for(int j=0;j<n;j++) {
+            chassBoard[0][j] = 1;
+            res += putOtherQueens(1);
+            chassBoard[0][j] = 0;
+        }
+        return res;
+    }
+    int putOtherQueens(int i) {
+        if(i==chassBoard.length) return 1;
+        int res = 0;
+        for(int j=0;j<chassBoard.length;j++) {
+            if(isPossibleToPutHere(i, j)) {
+                chassBoard[i][j] = 1;
+                res += putOtherQueens(i+1);
+                chassBoard[i][j] = 0;
+            }
+        }
+        return res;
+    }
+    boolean isPossibleToPutHere(int i, int j) {
+        for(int row=0;row<chassBoard.length;row++) {if(row!=i && chassBoard[row][j]==1) return false;}
+        int r=i-1, c=j-1;
+        while(r>=0 && c>=0) {if(chassBoard[r--][c--]==1) return false;}
+        r=i+1;c=j+1;
+        while(r<chassBoard.length && c<chassBoard.length) {if(chassBoard[r++][c++]==1) return false;}
+        r=i-1;c=j+1;
+        while(r>=0 && c<chassBoard.length) {if(chassBoard[r--][c++]==1) return false;}
+        r=i+1;c=j-1;
+        while(r<chassBoard.length && c>=0) {if(chassBoard[r++][c--]==1) return false;}
+        return true;
+    }
+}

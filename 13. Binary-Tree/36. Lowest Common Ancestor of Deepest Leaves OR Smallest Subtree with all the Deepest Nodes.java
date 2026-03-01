@@ -1,0 +1,42 @@
+class Solution {
+    public TreeNode lcaDeepestLeaves(TreeNode root) {
+        Queue<TreeNode> q = new LinkedList<>();
+        q.add(root);
+        int height = height(root);
+        int level = 0;
+        while(!q.isEmpty()) {
+            level++;
+            if(level==height) {
+                if(q.size()==1) return q.poll();
+                else {
+                    TreeNode n1 = null, n2 = null;
+                    int size = q.size();
+                    for(int i=1;i<=size;i++) {
+                        TreeNode t = q.poll();
+                        if(i==1) n1 = t;
+                        else if(i==size) n2 = t;
+                    }
+                    return lca(root, n1, n2);
+                }
+            }
+            int size = q.size();
+            for(int i=1;i<=size;i++) {
+                TreeNode t = q.poll();
+                if(t.left!=null) q.add(t.left);
+                if(t.right!=null) q.add(t.right);
+            }
+        }
+        return null;
+    }
+    int height(TreeNode root) {
+        if(root==null) return 0;
+        return 1 + Math.max(height(root.left), height(root.right));
+    }
+    TreeNode lca(TreeNode root, TreeNode n1, TreeNode n2) {
+        if(root==null || root==n1 || root==n2) return root;
+        TreeNode left = lca(root.left, n1, n2);
+        TreeNode right = lca(root.right, n1, n2);
+        if(left!=null && right!=null) return root;
+        return left!=null ? left : right;
+    }
+}

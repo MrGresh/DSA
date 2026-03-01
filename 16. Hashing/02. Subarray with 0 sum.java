@@ -1,0 +1,14 @@
+class Solution {
+    static boolean findsum(int arr[]) {
+        if(arr[0]==0) return true;
+        Set<Integer> set = new HashSet<>();
+        set.add(arr[0]);
+        for(int i=1;i<arr.length;i++) {
+            arr[i] += arr[i-1];
+            if(arr[i]==0) return true;
+            if(set.contains(arr[i])) return true;
+            else set.add(arr[i]);
+        }
+        return false;
+    }
+}

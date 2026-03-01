@@ -1,0 +1,76 @@
+// PriorityQueue
+class Solution {
+    public int minMeetingRooms(int[] start, int[] end) {
+        int[][] meetings = new int[start.length][2];
+        for(int i=0;i<start.length;i++) {
+            int[] meet = new int[2];
+            meet[0] = start[i];
+            meet[1] = end[i];
+            meetings[i] = meet;
+        }
+        Arrays.sort(meetings, (a, b) -> Integer.compare(a[0], b[0]));
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        int ans = 0;
+        for(int[] meet: meetings) {
+            int startTime = meet[0];
+            int endTime = meet[1];
+            while(!pq.isEmpty() && pq.peek()<=startTime) pq.poll();
+            pq.add(endTime);
+            ans = Math.max(ans, pq.size());
+        }
+        return ans;
+    }
+}
+------------------------------------------------------------------------------------------
+// Line-Sweep
+class Solution {
+    public int minMeetingRooms(int[] start, int[] end) {
+        TreeMap<Double, Integer> map = new TreeMap<>();
+
+        for (int i = 0; i < start.length; i++) {
+            double arrivalTime = (double) start[i];
+            map.put(arrivalTime, map.getOrDefault(arrivalTime, 0) + 1);
+
+            double departureTime = end[i]; 
+            map.put(departureTime, map.getOrDefault(departureTime, 0) - 1);
+        }
+
+        int maxRooms = 0;
+        int currentRooms = 0;
+
+        for (int count : map.values()) {
+            currentRooms += count;
+            maxRooms = Math.max(maxRooms, currentRooms);
+        }
+
+        return maxRooms;
+    }
+}
+------------------------------------------------------------------------------------------
+class Solution {
+    public int minMeetingRooms(int[] start, int[] end) {
+        Arrays.sort(start);
+        Arrays.sort(end);
+    
+        int n = start.length;
+        int roomsNeeded = 0;
+        int maxRooms = 0;
+        
+        int i = 0;
+        int j = 0;
+    
+        while (i < n && j < n) {
+            if (start[i] < end[j]) {
+                roomsNeeded++;
+                i++;
+            } 
+            else {
+                roomsNeeded--;
+                j++;
+            }
+            maxRooms = Math.max(maxRooms, roomsNeeded);
+        }
+    
+        return maxRooms;        
+    }
+}

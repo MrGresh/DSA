@@ -1,0 +1,70 @@
+class Solution {
+    public int characterReplacement(String s, int k) {
+        int ans=0, start=0, end=0;
+        int[] freqs = new int[26];
+        while(end<s.length()) {
+            freqs[s.charAt(end)-'A']++;
+            while((end-start+1-maxFreq(freqs)) > k) {
+                freqs[s.charAt(start)-'A']--;
+                start++;
+            }
+            ans = Math.max(ans, end-start+1);
+            end++;
+        }
+        return ans;
+    }
+    int maxFreq(int[] freqs) {
+        int maxFreq = 0;
+        for(int x: freqs) {
+            if(x>maxFreq) maxFreq=x;
+        }
+        return maxFreq;
+    }
+}
+-------------------------------------------------------------------
+/*class Solution {
+    public int characterReplacement(String s, int k) {
+        int ans=0, start=0, end=0;
+        int[] freqs = new int[26];
+        while(end<s.length()) {
+            freqs[s.charAt(end)-'A']++;
+            while((end-start+1-maxFreq(freqs)) > k) {
+                freqs[s.charAt(start)-'A']--;
+                start++;
+            }
+            ans = Math.max(ans, end-start+1);
+            end++;
+        }
+        return ans;
+    }
+    int maxFreq(int[] freqs) {
+        int maxFreq = 0;
+        for(int x: freqs) {
+            if(x>maxFreq) maxFreq=x;
+        }
+        return maxFreq;
+    }
+}*/
+class Solution {
+    public int characterReplacement(String s, int k) {
+        int ans=0, start=0, end=0;
+        int[] freqs = new int[26];
+        while(end<s.length()) {
+            freqs[s.charAt(end)-'A']++;
+            if((end-start+1-maxFreq(freqs)) > k) {
+                freqs[s.charAt(start)-'A']--;
+                start++;
+            }
+            if((end-start+1-maxFreq(freqs)) <= k) ans = Math.max(ans, end-start+1);
+            end++;
+        }
+        return ans;
+    }
+    int maxFreq(int[] freqs) {
+        int maxFreq = 0;
+        for(int x: freqs) {
+            if(x>maxFreq) maxFreq=x;
+        }
+        return maxFreq;
+    }
+}

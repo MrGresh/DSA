@@ -1,0 +1,46 @@
+class Solution {
+    List<Integer> res;
+    public List<Integer> grayCode(int n) {
+        res = new ArrayList();
+        int size = 1 << n;
+        List<Integer> curr = new ArrayList();
+        boolean[] vis = new boolean[size];
+        for(int i=0;i<size;i++) {
+            curr.add(i);
+            vis[i] = true;
+            if(rec(curr, size, vis)) return res;
+            curr.removeLast();
+            vis[i] = false;
+        }
+        return res;
+    }
+    boolean rec(List<Integer> curr, int size, boolean[] vis) {
+        if(curr.size()==size) {            
+            int first = curr.get(0);
+            int last = curr.get(size - 1);
+            if (Integer.bitCount(first ^ last) == 1) {
+                res = new ArrayList<>(curr);
+                return true;
+            }
+            return false;
+        }
+        int last = curr.get(curr.size() - 1);
+        for(int i=0;i<size;i++) {
+            if(!vis[i] && Integer.bitCount(last ^ i) == 1) {
+                vis[i] = true;
+                curr.add(i);
+                if(rec(curr, size, vis)) return true;
+                curr.removeLast();
+                vis[i] = false;
+            }
+        }
+        return false;
+    }
+}
+------------------------------------------------------------------------------------
+public List<Integer> grayCode(int n) {
+    List<Integer> result = new ArrayList<>();
+    int size = 1 << n; // 2^n
+    for (int i = 0; i < size; i++) result.add(i ^ (i / 2));
+    return result;
+}
