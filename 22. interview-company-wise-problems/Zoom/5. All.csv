@@ -1,0 +1,4 @@
+Difficulty,Title,Frequency,Acceptance Rate,Link,Topics
+EASY,User Activity for the Past 30 Days I,100.0,0.4948182850653038,https://leetcode.com/problems/user-activity-for-the-past-30-days-i,Database
+EASY,User Activity for the Past 30 Days II,100.0,0.35715706069505626,https://leetcode.com/problems/user-activity-for-the-past-30-days-ii,Database
+MEDIUM,Container With Most Water,66.0,0.5778299260380112,https://leetcode.com/problems/container-with-most-water,"Array, Two Pointers, Greedy"
