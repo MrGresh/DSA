@@ -1,15 +1,15 @@
-1. Array
-2. Prefix Sum
-3. Matrix
-4. Intervals
-5. Line - Sweep
+01. Array
+02. Prefix Sum
+03. Matrix
+04. Intervals
+05. Line - Sweep
 ---
-6. String
-7. Sorting
+06. String
+07. Sorting
+08. LinkedList
 ---
-8. 2 Pointer
-9. Sliding Window 
-10. Linked list
+09. 2 Pointer
+10. Sliding Window 
 11. Binary Search 
 ---
 12. Stack
@@ -27,4 +27,5 @@
 ---
 22. Tree
 23. BST
+---
 24. Graph
