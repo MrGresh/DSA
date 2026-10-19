@@ -14,8 +14,8 @@
 ---
 12. Stack
 13. Queue
-14. Hashing
-15. PQ
+14. PQ
+15. Hashing
 ---
 16. Recursion Backtracking 
 17. Trie
